@@ -1,0 +1,11 @@
+name: Python (CI)
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  lint_test_build:
+    uses: kyosenergy/reusable-actions-python/.github/workflows/python-ci.yaml@master
+    secrets: inherit

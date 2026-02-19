@@ -1,0 +1,3 @@
+* Copyright (C) 2022 KYOS Energy Consulting B.V. - All Rights Reserved
+* The copying and distribution of this project via any medium is strictly prohibited without the express permission of KYOS Energy Consulting B.V.
+* Proprietary and confidential

@@ -1,0 +1,11 @@
+name: Python (Deploy)
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy_or_artifact:
+    uses: kyosenergy/reusable-actions-python/.github/workflows/python-ci-deploy.yaml@master
+    secrets: inherit
