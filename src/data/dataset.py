@@ -8,6 +8,7 @@ from src.stats.descriptive import (
     compute_returns,
     compute_multi_descriptive_stats,
 )
+from src.stats.stationarity import StationarityTestSummary
 
 @dataclass
 class TimeSeriesDataset:
@@ -112,3 +113,12 @@ class TimeSeriesDataset:
         if numeric_df.empty:
             raise ValueError(f"No numeric columns found in dataset '{self.name}'.")
         return compute_multi_descriptive_stats(numeric_df)
+    
+    def check_stationarity(self, price_col: str | None = None) -> StationarityTestSummary:
+        """
+        Run stationarity tests on the price column and return a summary.
+        """
+        from src.stats.stationarity import run_stationarity_tests
+
+        col = self._resolve_price_column(price_col)
+        return run_stationarity_tests(self.df[col], series_name=f"{self.name}:{col}")
