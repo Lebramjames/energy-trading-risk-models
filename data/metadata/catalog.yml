@@ -1,0 +1,28 @@
+datasets:
+  brent_spot:
+    kind: timeseries
+    asset_class: energy
+    symbol: BRENTS
+    source: eia
+    path: data/processed/brent_spot.parquet
+    tz: UTC
+    freq: D
+    price_col: price
+    currency: USD
+    unit: bbl
+    start: 2010-01-01
+    end: 2025-12-31
+    tags: [oil, benchmark]
+
+  ttf_gas:
+    kind: timeseries
+    asset_class: energy
+    symbol: TTF
+    source: ice_endex
+    path: data/processed/ttf_gas.parquet
+    tz: Europe/Amsterdam
+    freq: D
+    price_col: settle
+    currency: EUR
+    unit: MWh
+    tags: [gas, europe]

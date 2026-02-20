@@ -9,6 +9,7 @@ repository = "https://github.com/kyosenergy/:model_name"
 [tool.poetry.dependencies]
 python = ">=3.11,<3.13"
 kyoslib_py = "^5.3.0"
+duckdb = "^1.4.4"
 
 [tool.poetry.group.dev.dependencies]
 invoke = "^2.2.0"
