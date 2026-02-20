@@ -12,6 +12,7 @@ kyoslib_py = "^5.3.0"
 duckdb = "^1.4.4"
 statsmodels = "^0.14.6"
 arch = "^8.0.0"
+matplotlib = "^3.10.8"
 
 [tool.poetry.group.dev.dependencies]
 invoke = "^2.2.0"
