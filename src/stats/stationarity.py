@@ -25,6 +25,26 @@ class StationarityTestSummary:
     adf_result: StationarityTestResult
     kpss_result: StationarityTestResult
     pp_result: StationarityTestResult
+    stationary_vote = property(lambda self: self._stationarity_vote(self))
+
+    @classmethod
+    def _stationarity_vote(cls, summary: "StationarityTestSummary", min_votes: int = 2) -> bool:
+        votes = [
+            summary.adf_result.is_stationary,
+            summary.kpss_result.is_stationary,
+            summary.pp_result.is_stationary,
+        ]
+        return sum(votes) >= min_votes
+
+def _clean_series(series: pd.Series) -> pd.Series:
+    s = pd.to_numeric(series, errors="coerce").dropna()
+    if s.empty:
+        raise ValueError("Series is empty after cleaning.")
+    if len(s) < 20:
+        raise ValueError("Series too short for reliable stationarity testing.")
+    if s.nunique() < 3:
+        raise ValueError("Series has too few unique values for stationarity tests.")
+    return s
 
 def adf_test(series: pd.Series, alpha: float = 0.05, regression: Literal['c', 'ct', 'ctt', 'n']= "c", autolag: str = "AIC"):
     """
@@ -41,17 +61,18 @@ def adf_test(series: pd.Series, alpha: float = 0.05, regression: Literal['c', 'c
     """
     from statsmodels.tsa.stattools import adfuller
 
-    s = pd.to_numeric(series, errors="coerce").dropna()
+    s = _clean_series(series)
     if s.empty:
         raise ValueError("Series is empty after cleaning.")
 
     result = adfuller(s, regression=regression, autolag=autolag)
+
     return StationarityTestResult(
         test_name="ADF",
         test_statistic=float(result[0]),
         p_value=float(result[1]),
         critical_values={str(k): float(v) for k, v in result[4].items()},
-        is_stationary=bool(result[1] < alpha) # Null hypothesis is non-stationarity, so we want p-value < alpha to conclude stationarity
+        is_stationary=bool(result[1] < alpha), # Null hypothesis is non-stationarity, so we want p-value < alpha to conclude stationarity
     )
 
 
@@ -62,7 +83,7 @@ def kpss_test(
 ):
     from statsmodels.tsa.stattools import kpss
 
-    s = pd.to_numeric(series, errors="coerce").dropna()
+    s = _clean_series(series)
     if s.empty:
         raise ValueError("Series is empty after cleaning.")
 
@@ -78,7 +99,7 @@ def kpss_test(
 def pp_test(series: pd.Series, regression: Literal['c', 'ct'] = "c", lags: int = 0, alpha: float = 0.05):
     from arch.unitroot import PhillipsPerron
 
-    s = pd.to_numeric(series, errors="coerce").dropna()
+    s = _clean_series(series)
     if s.empty:
         raise ValueError("Series is empty after cleaning.")
 

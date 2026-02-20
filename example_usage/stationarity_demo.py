@@ -33,3 +33,7 @@ print("\nNon-stationary series tests:")
 for test in [adf_test, kpss_test, pp_test]:
     result = test(nonstationary_series)
     print(f"{result.test_name} test: p-value={result.p_value:.4f}, is_stationary={result.is_stationary}")
+    
+print("\nFinal verdict:")
+print('Voted stationarity for stationary series:', run_stationarity_tests(stationary_series).stationary_vote)
+print('Voted stationarity for non-stationary series:', run_stationarity_tests(nonstationary_series).stationary_vote)
